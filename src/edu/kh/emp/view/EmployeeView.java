@@ -124,15 +124,10 @@ public class EmployeeView {
 		
 		if(empList.isEmpty()) {
 			System.out.println("사원 정보가 없습니다.");
-			
-			return;
 		}
+		printAll(empList);
 		
-		int index = 0;
-		for(Employee emp : empList) {
-			System.out.print((index++) + "번 : ");
-			System.out.println(emp);
-		}
+	
 	}
 	
 	
@@ -140,7 +135,9 @@ public class EmployeeView {
 	 * @param empList
 	 */
 	public void printAll(List<Employee> empList) {
-		return;
+		for(Employee emp : empList) {
+			System.out.println(emp);
+		}
 	}
 	
 	
@@ -151,15 +148,14 @@ public class EmployeeView {
 		
 		System.out.println("=====사원 정보 조회=====");
 		
-		System.out.print("사번 입력 : ");
-		int input = sc.nextInt();
+		int empId = inputEmpId();
 		
 		boolean flag = true;
 		
 		for(Employee emp : empList) {
 			
-			if(input == emp.getEmpId()) {
-				System.out.println(emp);
+			if(empId == emp.getEmpId()) {
+				printOne(emp);
 				flag = false;
 			}
 		}
@@ -174,7 +170,12 @@ public class EmployeeView {
 	 * @return empId
 	 */
 	public int inputEmpId() {
-		return 0;
+		
+		System.out.print("사번 입력 : ");
+		int input = sc.nextInt();
+		sc.nextLine();
+		
+		return input;
 	}
 	
 	
@@ -182,7 +183,7 @@ public class EmployeeView {
 	 * @param emp
 	 */
 	public void printOne(Employee emp) {
-		
+		System.out.println(emp.toString());	
 	}
 	
 	
@@ -200,7 +201,7 @@ public class EmployeeView {
 		
 		for(Employee emp : empList) {
 			if(input.equals(emp.getEmpNo())){
-				System.out.println(emp);
+				printOne(emp);
 				flag = false;
 			}
 		}
@@ -270,14 +271,12 @@ public class EmployeeView {
 		
 		System.out.println("=====사원 정보 수정=====");
 		
-		System.out.print("사번 입력 : ");
-		int input = sc.nextInt();
-		sc.nextLine();
+		int empId = inputEmpId();
 		
 		boolean flag = true;
 		
 		for(Employee emp : empList) {
-			if(input == emp.getEmpId()) {
+			if(empId == emp.getEmpId()) {
 				System.out.print("수정할 이메일 : ");
 				String email = sc.next();
 				
@@ -309,27 +308,30 @@ public class EmployeeView {
 // 에러난거 나중에 확인		
 		System.out.println("=====사원 정보 삭제=====");
 		
-		System.out.print("사번 입력 : ");
-		int input = sc.nextInt();
-		sc.nextLine();
+		
+		int empId = inputEmpId();
 		
 		boolean flag = true;
 		
-		for(Employee emp : empList) {
-			if(input == emp.getEmpId()) {
+		if(empList.isEmpty()) {
+			System.out.println("사원 정보가 없습니다.");
+		}
+		for(int i = 0; i < empList.size(); i++) {
+			if(empList.get(i).getEmpId() == empId) {
 				System.out.print("정말 삭제하시겠습니까?(Y/N)");
 				char ch = sc.next().toUpperCase().charAt(0);
 				if(ch == 'Y') {
-					empList.remove(emp);
+					Employee temp = empList.remove(i);
+					System.out.println("사번 " + temp.getEmpId() + "번 직원의 정보가 삭제되었습니다");
 					flag = false;
 				} else {
-					System.out.println("취소되었습니다.");
+					System.out.println("취소되었습니다");
+					flag = false;
 				}
 			}
 		}
-		
 		if(flag) {
-			System.out.println("검색결과가 없습니다.");
+			System.out.println("검색결과가 없습니다");
 		}
 		
 	}
@@ -349,7 +351,7 @@ public class EmployeeView {
 		
 		for(Employee emp : empList) {
 			if(input.equals(emp.getDeptCode())) {
-				System.out.println(emp);
+				printOne(emp);
 				flag = false;
 			}
 		}
@@ -376,12 +378,12 @@ public class EmployeeView {
 		System.out.println(input + "원 이상 급여를 받는 직원");
 		for(Employee emp : empList) {
 			if(emp.getSalary() >= input) {
-				System.out.println(emp);
+				printOne(emp);
 				flag = false;
 			}
 		}
 		if(flag) {
-			System.out.println("없습니다.");
+			System.out.println("입력된 급여 이상을 받는 직원이 없습니다.");
 		}
 		
 	}
@@ -390,16 +392,11 @@ public class EmployeeView {
 	 * 부서별 급여 합 전체 조회
 	 */
 	public void selectDeptTotalSalary() {
+		// DB 조회 결과를 HashMap<String, Integer>에 옮겨 담아서 반환
+		// 부서코드, 급여 합 조회
 		// 나중에 다시하기
 		System.out.println("=====부서별 급여 합=====");
-		for(Employee emp : empList) {
-			if(emp.getDeptCode().equals(emp)) {
-				int sum = 0;
-				
-				sum += emp.getSalary();
-				System.out.println(emp.getDeptCode() + "급여 합계 : " + sum);
-			}
-		}
+		
 		
 	}
 	
@@ -407,6 +404,8 @@ public class EmployeeView {
 	 * 직급별 급여 평균 조회
 	 */
 	public void selectJobAvgSalary() {
+		// DB 조회 결과를 HashMap<String, Double>에 옮겨 담아서 반환 
+		// 직급명, 급여 평균(소수점 첫째자리) 조회
 		
 		
 	}
