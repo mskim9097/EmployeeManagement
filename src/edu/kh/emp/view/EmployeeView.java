@@ -1,9 +1,9 @@
 package edu.kh.emp.view;
 
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.List;
+import java.util.Map;
 
 import edu.kh.emp.model.dao.EmployeeDAO;
 import edu.kh.emp.model.vo.Employee;
@@ -324,17 +324,7 @@ public class EmployeeView {
 		
 		List<Employee> empList = dao.selectDeptEmp(departmentTitle);
 		
-		if(empList.isEmpty()) {
-			System.out.println("조회된 사원 정보가 없습니다.");
-		} else {
-			System.out.println("사번  |   이름  | 주민 등록 번호 |        이메일        |  전화 번호  |    부서    | 직책 | 급여" );
-			System.out.println("------------------------------------------------------------------------------------------------");
-			for(Employee emp : empList) { 
-				System.out.printf(" %2d  | %4s | %s | %20s | %s | %s | %s | %d\n",
-						emp.getEmpId(), emp.getEmpName(), emp.getEmpNo(), emp.getEmail(), 
-						emp.getPhone(), emp.getDepartmentTitle(), emp.getJobName(), emp.getSalary());
-			}
-		}
+		printAll(empList);
 		
 	}
 	
@@ -350,17 +340,7 @@ public class EmployeeView {
 		
 		List<Employee> empList = dao.selectSalaryEmp(salary);
 		
-		if(empList.isEmpty()) {
-			System.out.println("조회된 사원 정보가 없습니다.");
-		} else {
-			System.out.println("사번  |   이름  | 주민 등록 번호 |        이메일        |  전화 번호  |    부서    | 직책 | 급여" );
-			System.out.println("------------------------------------------------------------------------------------------------");
-			for(Employee emp : empList) { 
-				System.out.printf(" %2d  | %4s | %s | %20s | %s | %s | %s | %d\n",
-						emp.getEmpId(), emp.getEmpName(), emp.getEmpNo(), emp.getEmail(), 
-						emp.getPhone(), emp.getDepartmentTitle(), emp.getJobName(), emp.getSalary());
-			}
-		}
+		printAll(empList);
 		
 		
 	}
@@ -372,7 +352,11 @@ public class EmployeeView {
 		// DB 조회 결과를 HashMap<String, Integer>에 옮겨 담아서 반환
 		// 부서코드, 급여 합 조회
 		// 나중에 다시하기
-		System.out.println("=====부서별 급여 합=====");
+		System.out.println("<부서별 급여 합 전체 조회>");
+		
+		Map<String, Integer> empMap = dao.selectDeptTotalSalary();
+		
+		System.out.println(empMap);
 		
 		
 	}
@@ -383,7 +367,11 @@ public class EmployeeView {
 	public void selectJobAvgSalary() {
 		// DB 조회 결과를 HashMap<String, Double>에 옮겨 담아서 반환 
 		// 직급명, 급여 평균(소수점 첫째자리) 조회
+		System.out.println("<직급별 급여 평균 조회>");
 		
+		Map<String, Double> empMap = dao.selectJobAvgSalary();
+		
+		System.out.println(empMap);
 		
 	}
 	

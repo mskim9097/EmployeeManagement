@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.kh.emp.model.vo.Employee;
 
@@ -501,7 +503,7 @@ public class EmployeeDAO {
 	
 	/** 사번이 일치하는 사원 정보 조회 DAO
 	 * @param empId
-	 * @return
+	 * @return emp
 	 */
 	public Employee selectEmpId(int empId) {
 		
@@ -557,7 +559,87 @@ public class EmployeeDAO {
 	}
 	
 	
+	/** 부서별 급여 합 전체 조회 DAO
+	 * @return empMap
+	 */
+	public Map<String, Integer> selectDeptTotalSalary() {
+		
+		Map<String, Integer> empMap = new HashMap<>();
+				
+		try {
+			
+			Class.forName(driver);
+			conn = DriverManager.getConnection(url, user, pw);
+			
+			String sql = "SELECT NVL(DEPT_CODE, '부서없음') DEPT_CODE, SUM(SALARY) SALARY\r\n"
+					+ "FROM EMPLOYEE\r\n"
+					+ "GROUP BY DEPT_CODE\r\n";
+			
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			
+			while(rs.next()) {							
+				empMap.put(rs.getString("DEPT_CODE"), rs.getInt("SALARY"));
+			}
+			
+			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(stmt != null) stmt.close();
+				if(conn != null) conn.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+				
+		return empMap;
+	}
 	
+	
+	/** 직급별 급여 평균 조회 DAO
+	 * @return empMap
+	 */
+	public Map<String, Double> selectJobAvgSalary(){
+		
+		Map<String, Double> empMap = new HashMap<>();
+		
+		try {
+			
+			Class.forName(driver);
+			conn = DriverManager.getConnection(url, user, pw);
+			
+			String sql = "SELECT JOB_NAME, ROUND(AVG(SALARY), 1) SALARY\r\n"
+					+ "FROM EMPLOYEE\r\n"
+					+ "LEFT JOIN JOB USING(JOB_CODE)\r\n"
+					+ "GROUP BY JOB_NAME";
+			
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			
+			while(rs.next()) {
+				empMap.put(rs.getString("JOB_NAME"), rs.getDouble("SALARY"));
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(stmt != null) stmt.close();
+				if(conn != null) conn.close();
+				
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return empMap;
+	}
 	
 	
 }
