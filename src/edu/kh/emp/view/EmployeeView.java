@@ -130,11 +130,15 @@ public class EmployeeView {
 	public void selectEmpId() {		
 		System.out.println("<사번이 일치하는 사원 정보 조회>");
 		
+		// 사번 입력 받기
 		int empId = inputEmpId();
 		
+		// 입력 받은 사번을 DAO의 selectEmpId() 메서드로 전달하여
+		// 조회된 사원 정보 반환 받기
 		Employee emp = dao.selectEmpId(empId);
 		
 		printOne(emp);
+		
 	}
 	
 	
@@ -325,6 +329,7 @@ public class EmployeeView {
 		List<Employee> empList = dao.selectDeptEmp(departmentTitle);
 		
 		printAll(empList);
+		//printAll(dao.selectDeptEmp(departmentTitle));
 		
 	}
 	
@@ -335,7 +340,7 @@ public class EmployeeView {
 		
 		System.out.println("<입력 받은 급여 이상을 받는 모든 사원 정보 조회>");
 		
-		System.out.print("급여 입력 : ");
+		System.out.print("급여 : ");
 		int salary = sc.nextInt();
 		
 		List<Employee> empList = dao.selectSalaryEmp(salary);
@@ -351,12 +356,16 @@ public class EmployeeView {
 	public void selectDeptTotalSalary() {
 		// DB 조회 결과를 HashMap<String, Integer>에 옮겨 담아서 반환
 		// 부서코드, 급여 합 조회
-		// 나중에 다시하기
 		System.out.println("<부서별 급여 합 전체 조회>");
 		
 		Map<String, Integer> empMap = dao.selectDeptTotalSalary();
 		
-		System.out.println(empMap);
+		for(String key : empMap.keySet()) {
+			Object value = empMap.get(key);
+			System.out.println(key + " : " + value + "원");
+		}
+		
+		//System.out.println(empMap);
 		
 		
 	}
@@ -371,7 +380,12 @@ public class EmployeeView {
 		
 		Map<String, Double> empMap = dao.selectJobAvgSalary();
 		
-		System.out.println(empMap);
+		for(String key : empMap.keySet()) {
+			Object value = empMap.get(key);
+			System.out.println(key + " : " + value + "원");
+		}
+		
+		//System.out.println(empMap);
 		
 	}
 	
